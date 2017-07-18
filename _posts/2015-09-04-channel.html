@@ -427,6 +427,11 @@ title=API+Testing+Channel</code></pre>
 				<td>string</td>
 				<td>Listed when the channel is online.</td>
 			</tr>
+			<tr>
+				<td>picture</td>
+				<td>map</td>
+				<td>List of channel picture in different sizes. The key is the size (eg: 96x96) the value is the picture URL.</td>
+			</tr>
 		</table>
 
 		<p>The paging information can be found inside the "paging" element. Example:</p>
@@ -659,6 +664,28 @@ title=API+Testing+Channel</code></pre>
 				<td>The specified type is invalid or unsupported</td>
 			</tr>
 		</table>
+
+		<h4>Getting the authentication</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">GET</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/locks/hash.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+		<p>A set of a key-value structures under a "hashlock" element. Example:</p>
+		<pre><code class="json">"hashlock": {
+      "type": "advanced",
+    "url": "https://align.ustream.tv/auth/123",
+    "message": null,
+    "button_caption": null,
+    "popup_width": "0",
+    "popup_height": "0"
+  }</code></pre>
 
 		<h4>Remove authentication</h4>
 		<table class="table fill-bg-light1 table-chromeless">
@@ -1413,6 +1440,84 @@ title=API+Testing+Channel</code></pre>
 				<td>not_found</td>
 				<td>404 Not found</td>
 				<td>Channel not found</td>
+			</tr>
+		</table>
+
+		<h3>Channel picture</h3>
+
+		<h4>Set channel picture</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">POST</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/design/picture.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>picture</td>
+				<td>file</td>
+				<td>REQUIRED</td>
+				<td>The channel picture. The image must be square and less than 1MB</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 204 No Content is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>lack_of_ownership</td>
+				<td>403 Forbidden</td>
+				<td>The api user is not allowed to manage the given channel</td>
+			</tr>
+			<tr>
+				<td>bad_request</td>
+				<td>400 Bad request</td>
+				<td>Image format or size is wrong</td>
+			</tr>
+		</table>
+
+		<h4>Remove channel picture</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">DELETE</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/design/picture.FORMAT</a>
+					(format can be json or xml)</td>
+			</tr>
+
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>lack_of_ownership</td>
+				<td>403 Forbidden</td>
+				<td>The api user is not allowed to manage the given channel</td>
 			</tr>
 		</table>
 	</section>
@@ -3002,6 +3107,67 @@ Authorization: Bearer 782f6544405a22636f3d5d3b63c2573673bf3950
 				<td>The specified video_id does not exist</td>
 			</tr>
 		</table>
+
+		<h3>Video thumbnail</h3>
+		<p>You can set a video thumbnail by uploading a picture or selecting a frame. The picture should be less than 10MB in size and smaller than 4000x4000px.</p>
+		<h4>Uploading a thumbail</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">POST</td>
+				<td>
+					<a>https://api.ustream.tv/videos/VIDEO_ID/thumbnail.FORMAT</a>
+					(format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>thumbnail</td>
+				<td>file</td>
+				<td>REQUIRED</td>
+				<td>The thumbnail image.</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 204 No content is returned.</p>
+
+		<h4>Selecting a frame</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">POST</td>
+				<td>
+					<a>https://api.ustream.tv/videos/VIDEO_ID/thumbnail/frame.FORMAT</a>
+					(format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>position</td>
+				<td>float</td>
+				<td>REQUIRED</td>
+				<td>The position of the selected frame in seconds.</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 204 No content is returned.</p>
+
 
 		<h3>Video labels</h3>
 		<p>A video can have multiple labels. With these API calls you can add and remove labels to/from a video.</p>
